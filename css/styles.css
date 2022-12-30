@@ -1,0 +1,12 @@
+*{
+    box-sizing: border-box;
+
+    padding: 0;
+}
+section, #buttons{
+    display: flex;
+    justify-content: space-evenly;
+}
+#start{
+    margin: 0 auto;
+}
