@@ -81,6 +81,7 @@ function start(data){
     aiScore += convertToNumAi(data['cards'][1]['value'])
     score1.innerText = userScore
     score2.innerText = aiScore
+    document.getElementById('start').innerText = 'Keep Playing'
 }
 function drawSecondcard(data, code){
     const url = `https://www.deckofcardsapi.com/api/deck/${code}/draw/?count=2`
