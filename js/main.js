@@ -27,18 +27,7 @@ function blackJack(){
             // console.log(deckId)
             start(data)
 
-            const twoSec =  setTimeout(drawSecondcard, 200, data,deckId)
-            console.log(userScore)
-            if(userScore === 21){
-                alert('Gameover you hit blackjack')
-                // player1.src = ''
-                // player2.src = ''
-                userScore = 0
-                aiScore = 0
-                score1.innerText = userScore
-                score2.innerText = aiScore
-                startedGame = false
-            }
+            const twoSec =  setTimeout(drawSecondcard, 100, data,deckId)
             
         })
         .catch(err => {
@@ -94,6 +83,14 @@ function drawSecondcard(data, code){
             userScore += convertToNumUser(data['cards'][0]['value'])
             aiScore += convertToNumAi(data['cards'][1]['value'])
             score1.innerText = userScore
+
+            if(userScore === 21){
+                alert('Gameover you hit blackjack')
+                // player1.src = ''
+                // player2.src = ''
+                restGame()
+                startedGame = false
+            }
         })
         .catch(err => {
             console.log(`error ${err}`)
@@ -113,18 +110,12 @@ function hit(){
                 alert('Gameover you went over 21 you LOST')
                 // player1.src = ''
                 // player2.src = ''
-                userScore = 0
-                aiScore = 0
-                score1.innerText = userScore
-                score2.innerText = aiScore
+                restGame()
             } else if(userScore === 21){
                 alert('Gameover you hit blackjack')
                 // player1.src = ''
                 // player2.src = ''
-                userScore = 0
-                aiScore = 0
-                score1.innerText = userScore
-                score2.innerText = aiScore
+                restGame()
             } 
         })
         .catch(err => {
@@ -134,67 +125,61 @@ function hit(){
 }
 function stay(){
     score2.innerText = aiScore
-    if(aiScore <= 16){
+    if (aiScore >= 17){
+         gameOutcomes()
+    }else if(aiScore <= 16){
         const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
         fetch(url)
             .then(res => res.json()) // parse response as JSON
             .then(data => {
-                // console.log(data)
-                // console.log(deckId)
-               // alert('drawing card')
                const player2 = document.getElementById('playerTwo')
-                //player2.src = data['cards'][1]['image']
                 aiScore += convertToNumAi(data['cards'][0]['value'])
                 score2.innerText = aiScore
-                if(aiScore > 21){
-                    alert('Gameover Dealer went over 21 you WON')
-                    // player1.src = ''
-                    // player2.src = ''
-                    userScore = 0
-                    aiScore = 0
-                    score1.innerText = userScore
-                    score2.innerText = aiScore
-                } else if(aiScore === 21){
-                    alert('Gameover Dealer hit blackjack')
-                    // player1.src = ''
-                    // player2.src = ''
-                    userScore = 0
-                    aiScore = 0
-                    score1.innerText = userScore
-                    score2.innerText = aiScore
-                } else if (aiScore > userScore){
-                    alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you LOST!!!`)
-                    // player1.src = ''
-                    // player2.src = ''
-                    userScore = 0
-                    aiScore = 0
-                    score1.innerText = userScore
-                    score2.innerText = aiScore
-                }  else if (userScore > aiScore){
-                    alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you WON!!!`)
-                    // player1.src = ''
-                    // player2.src = ''
-                    userScore = 0
-                    aiScore = 0
-                    score1.innerText = userScore
-                    score2.innerText = aiScore
-                } else if(aiScore === userScore){
-                    alert(`user score:${userScore} dealer score:${aiScore} TIE!!!! keep playing`)
-                    // player1.src = ''
-                    // player2.src = ''
-                    userScore = 0
-                    aiScore = 0
-                    score1.innerText = userScore
-                    score2.innerText = aiScore
-                } 
-                console.log(aiScore)
-                console.log(userScore)
+                gameOutcomes()
             })
             .catch(err => {
                 console.log(deckId)
                 console.log(`error ${err}`)
         });
     }
+}
+function restGame(){
+    userScore = 0
+    aiScore = 0
+    score1.innerText = userScore
+    score2.innerText = aiScore
+}
+function gameOutcomes(){
+    if(userScore === aiScore){
+        alert(`TIE!!!! keep playing`)
+        // player1.src = ''
+        // player2.src = ''
+        restGame()
+    }
+     if(aiScore > 21){
+        alert('Gameover Dealer went over 21 you WON')
+        // player1.src = ''
+        // player2.src = ''
+        restGame()
+    } 
+    if(aiScore === 21){
+        alert('Gameover Dealer hit blackjack')
+        // player1.src = ''
+        // player2.src = ''
+        restGame()
+    } 
+     if (aiScore > userScore){
+        alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you LOST!!!`)
+        // player1.src = ''
+        // player2.src = ''
+        restGame()
+    } 
+    if (userScore > aiScore){
+        alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you WON!!!`)
+        // player1.src = ''
+        // player2.src = ''
+        restGame()
+    } 
 }
 document.querySelector('#start').addEventListener('click', blackJack)
 document.querySelector('#hitMe').addEventListener('click', hit)
