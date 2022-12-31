@@ -194,3 +194,8 @@ document.querySelector('#stay').addEventListener('click', stay)
 // if ai is 16 or under  he draws another card if 17 0or over then he stays
 // // if dealer bust over 21 player 1 wins 
 // if dealer doesnt bust then if your score is higher than the ai then you win 
+
+// local storage 
+// store deck id
+// store wins and loses
+// store cards remaining in deck 
