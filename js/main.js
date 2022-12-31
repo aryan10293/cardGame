@@ -1,4 +1,4 @@
-import  startGame  from "./start.js";
+
 let deckId = 0
 let userScore = 0
 let aiScore = 0
