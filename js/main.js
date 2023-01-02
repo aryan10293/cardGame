@@ -159,35 +159,25 @@ function restGame(){
 function gameOutcomes(){
     if(userScore === aiScore){
         alert(`TIE!!!! keep playing`)
-        // player1.src = ''
-        // player2.src = ''
         restGame()
     }
      if(aiScore > 21){
         alert('Gameover Dealer went over 21 you WON')
-        // player1.src = ''
-        // player2.src = ''
         gettingUserScore()
         restGame()
     } 
     if(aiScore === 21){
         alert('Gameover Dealer hit blackjack')
-        // player1.src = ''
-        // player2.src = ''
         gettingDealerScore()
         restGame()
     } 
      if (aiScore > userScore){
         alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you LOST!!!`)
-        // player1.src = ''
-        // player2.src = ''
         gettingDealerScore()
         restGame()
     } 
     if (userScore > aiScore){
         alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you WON!!!`)
-        // player1.src = ''
-        // player2.src = ''
         gettingUserScore()
         restGame()
     } 
@@ -234,7 +224,7 @@ if(!localStorage.getItem('dealer') && !localStorage.getItem('player')){
 // // if dealer bust over 21 player 1 wins 
 // if dealer doesnt bust then if your score is higher than the ai then you win 
 
-// local storage 
-// store deck id
-// store wins and loses
-// store cards remaining in deck 
+// //local storage 
+// //store deck id
+// //store wins and loses
+// //store cards remaining in deck 
