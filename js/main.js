@@ -1,8 +1,7 @@
-
+let useScore = 0
 let deckId = 0
 let userScore = 0
 let aiScore = 0
-let startedGame = false
 const score1 = document.getElementById('score1')
 const score2 = document.getElementById('score2')
 const player1 = document.getElementById('playerOne')
@@ -11,6 +10,7 @@ fetch(`https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6`)
     .then(res => res.json()) // parse response as JSON
     .then(data => {
         deckId = data['deck_id']
+
     })
     .catch(err => {
         console.log(`error ${err}`)
@@ -19,19 +19,23 @@ fetch(`https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6`)
 
 function blackJack(){
     startedGame = true
-    const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`
+    if(!localStorage.getItem('deck')){
+        localStorage.setItem('deck', deckId)
+    }
+    console.log(localStorage.getItem('deck'))
+    const url = `https://www.deckofcardsapi.com/api/deck/${localStorage.getItem('deck')}/draw/?count=2`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
         .then(data => {
-            // console.log(data)
-            // console.log(deckId)
+             console.log(data)
+            //console.log(deckId)
             start(data)
 
-            const twoSec =  setTimeout(drawSecondcard, 100, data,deckId)
+            const twoSec =  setTimeout(drawSecondcard, 100, data,localStorage.getItem('deck'))
             
         })
         .catch(err => {
-            console.log(deckId)
+           // console.log(deckId)
             console.log(`error ${err}`)
     });
 }
@@ -88,6 +92,7 @@ function drawSecondcard(data, code){
                 alert('Gameover you hit blackjack')
                 // player1.src = ''
                 // player2.src = ''
+                gettingUserScore()
                 restGame()
                 startedGame = false
             }
@@ -97,7 +102,7 @@ function drawSecondcard(data, code){
     });
 }
 function hit(){
-    const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
+    const url = `https://www.deckofcardsapi.com/api/deck/${localStorage.getItem('deck')}/draw/?count=1`
     fetch(url)
         .then(res => res.json()) // parse response as JSON
         .then(data => {
@@ -110,11 +115,13 @@ function hit(){
                 alert('Gameover you went over 21 you LOST')
                 // player1.src = ''
                 // player2.src = ''
+                gettingDealerScore()
                 restGame()
             } else if(userScore === 21){
                 alert('Gameover you hit blackjack')
                 // player1.src = ''
                 // player2.src = ''
+                gettingUserScore()
                 restGame()
             } 
         })
@@ -128,7 +135,7 @@ function stay(){
     if (aiScore >= 17){
          gameOutcomes()
     }else if(aiScore <= 16){
-        const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`
+        const url = `https://www.deckofcardsapi.com/api/deck/${localStorage.getItem('deck')}/draw/?count=1`
         fetch(url)
             .then(res => res.json()) // parse response as JSON
             .then(data => {
@@ -160,30 +167,62 @@ function gameOutcomes(){
         alert('Gameover Dealer went over 21 you WON')
         // player1.src = ''
         // player2.src = ''
+        gettingUserScore()
         restGame()
     } 
     if(aiScore === 21){
         alert('Gameover Dealer hit blackjack')
         // player1.src = ''
         // player2.src = ''
+        gettingDealerScore()
         restGame()
     } 
      if (aiScore > userScore){
         alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you LOST!!!`)
         // player1.src = ''
         // player2.src = ''
+        gettingDealerScore()
         restGame()
     } 
     if (userScore > aiScore){
         alert(`Gameover Dealer scored:${aiScore} and you scored:${userScore} you WON!!!`)
         // player1.src = ''
         // player2.src = ''
+        gettingUserScore()
         restGame()
     } 
+}
+function gettingDealerScore(){
+    let dealScore = localStorage.getItem('dealer')
+    dealScore++
+    localStorage.setItem('dealer', dealScore)
+    document.getElementById('dealerGame').innerText = dealScore
+}
+function gettingUserScore(){
+    let useScore = localStorage.getItem('player')
+    useScore++
+    localStorage.setItem('player', useScore)
+    document.getElementById('userGame').innerText = useScore
 }
 document.querySelector('#start').addEventListener('click', blackJack)
 document.querySelector('#hitMe').addEventListener('click', hit)
 document.querySelector('#stay').addEventListener('click', stay)
+document.getElementById('reset').addEventListener('click', function(){
+    localStorage.clear()
+    player1.src = ''
+    player2.src = ''
+    document.getElementById('userGame').innerText = ''
+    document.getElementById('dealerGame').innerText = ''
+    restGame()
+})
+if(!localStorage.getItem('dealer') && !localStorage.getItem('player')){
+    localStorage.setItem('dealer', 0)
+    localStorage.setItem('player', 0)
+} else {
+    document.getElementById('userGame').innerText = localStorage.getItem('player')
+    document.getElementById('dealerGame').innerText = localStorage.getItem('dealer')
+    
+}
 //  // display card for player 1 and display card for ai 
 // // display another card for player 1 also display his total value and continue to show ai first card but hide second 
 // // cards 2-10 are scored as is jacks kings and queens are equal to 10
