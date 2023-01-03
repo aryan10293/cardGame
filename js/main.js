@@ -226,4 +226,5 @@ if(!localStorage.getItem('dealer') && !localStorage.getItem('player')){
 // //local storage 
 // //store deck id
 // //store wins and loses
-// //store cards remaining in deck 
+// // store cards remaining in deck 
+ 
