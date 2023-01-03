@@ -18,7 +18,6 @@ fetch(`https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=6`)
 
 
 function blackJack(){
-    startedGame = true
     if(!localStorage.getItem('deck')){
         localStorage.setItem('deck', deckId)
     }
@@ -151,8 +150,8 @@ function stay(){
     }
 }
 function restGame(){
-    userScore = 0
-    aiScore = 0
+    userScore = ''
+    aiScore = ''
     score1.innerText = userScore
     score2.innerText = aiScore
 }
