@@ -150,8 +150,8 @@ function stay(){
     }
 }
 function restGame(){
-    userScore = ''
-    aiScore = ''
+    userScore = 0
+    aiScore = 0
     score1.innerText = userScore
     score2.innerText = aiScore
 }
